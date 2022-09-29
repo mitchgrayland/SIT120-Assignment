@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Patch</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <link rel="stylesheet" href="main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />  
+</head>
+  <body>
+    <div id="app">
+      <nav v-bind:class="{open : sidebar_open}">
+        <div class="logo">
+          <img src="images/carrot-icon.png" alt="logo">
+          <h2>My Patch</h2>
+        </div>
+        <div v-if="signed_in" class="nav-items">
+          <div class="nav-item" v-for="item in nav_items" 
+            v-on:click="set_page(item.name)" v-bind:class="{active : current_page === item.name}">
+            {{ item.display }}
+          </div>
+          <div class="nav-item" v-on:click="logout">Logout</div>
+        </div>
+        <div v-else class="nav-items">
+          <div class="nav-item active" v-on:click="set_page('login')">Login</div>
+        </div>
+      </nav>
+      <div class="mobile-header">
+        <div class="sidebar-toggle" v-on:click="toggle_sidebar"></div>
+      </div>
+      <main>
+        <div>
+          <login @sign_in="sign_in" @set_page="set_page" v-if="!signed_in && current_page === 'login'"></login>
+          <forgot @set_page="set_page" v-if="!signed_in && current_page === 'forgot'"></forgot>
+          <register @set_page="set_page" v-if="!signed_in && current_page === 'register'"></register>
+          <dashboard v-if="current_page === 'home'" v-bind:todo="todo" v-bind:alerts="alerts" v-bind:tips="tips"></dashboard>
+          <new-patch @set_page="set_page" v-if="current_page === 'new-patch'"></new-patch>
+          <my-patches @set_page="set_page" v-if="current_page === 'my-patches'" v-bind:patches="patches"></my-patches>
+          <edit-patch @set_page="set_page" v-if="current_page === 'edit-patch'" v-bind:patches="patches" v-bind:patch_id="patch_id"></edit-patch>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+<script src="main.js"></script>
